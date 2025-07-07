@@ -7,7 +7,7 @@ const getProducts = async (req, res) => {
     const product = await Product.find({ category });
     return res.send(product);
   }
-  const product = await Product.find();
+  const product = await Product.find().populate("user", "fullname email -_id");
   res.send(product);
 };
 
@@ -15,7 +15,10 @@ const addProduct = async (req, res) => {
   const product = req.body;
   try {
     const parsedProduct = createProductSchema.parse(product);
-    const newProduct = await Product.create(parsedProduct);
+    const newProduct = await Product.create({
+      ...parsedProduct,
+      user: req.user._id,
+    });
     res.send({
       message: "Product created!",
       product: newProduct,

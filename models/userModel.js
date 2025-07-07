@@ -16,6 +16,10 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
@@ -24,6 +28,7 @@ export const createUserSchema = z.object({
   fullname: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(6),
+  isAdmin: z.boolean().default(false),
 });
 
 userSchema.pre("save", async function (next) {
